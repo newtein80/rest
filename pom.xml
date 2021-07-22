@@ -15,7 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
-		<org.apache.commons.codec-version>1.11</org.apache.commons.codec-version>
+		<org.apache.commons.codec-version>1.15</org.apache.commons.codec-version>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -10,10 +10,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -26,7 +24,8 @@ import com.service.rest.common.exception.exceptions.RestNotFoundException;
 import com.service.rest.common.exception.exceptions.RestUnauthorizedException;
 import com.service.rest.common.response.RestErrorStatus;
 import com.service.rest.common.response.RestResponseMessage;
-import com.service.rest.security.model.enums.UserRole;
+import com.service.rest.security.exception.TokenRefreshException;
+import com.service.rest.security.exception.UserNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -38,11 +37,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -377,27 +373,27 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return sendToExceptionInternal(ex, request, _exception, restErrorStatus);
     }
 
-    // @ExceptionHandler({ UserNotFoundException.class, RestNotFoundException.class })
-    // public ResponseEntity<Object> handleUserNotFoundException(final UserNotFoundException ex, final WebRequest request, final HttpServletRequest req) throws Exception {
+    @ExceptionHandler({ UserNotFoundException.class, RestNotFoundException.class })
+    public ResponseEntity<Object> handleUserNotFoundException(final UserNotFoundException ex, final WebRequest request, final HttpServletRequest req) throws Exception {
 
-    //     String error = ex.getMessage();
+        String error = ex.getMessage();
 
-    //     AbstractRestBaseException _exception = new RestNotFoundException(error, ex);
-    //     RestErrorStatus restErrorStatus = new RestErrorStatus(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), error);
+        AbstractRestBaseException _exception = new RestNotFoundException(error, ex);
+        RestErrorStatus restErrorStatus = new RestErrorStatus(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), error);
 
-    //     return sendToExceptionInternal(ex, request, _exception, restErrorStatus);
-    // }
+        return sendToExceptionInternal(ex, request, _exception, restErrorStatus);
+    }
 
-    // @ExceptionHandler({ TokenRefreshException.class, RestUnauthorizedException.class })
-    // public ResponseEntity<Object> handleTokenRefreshException(final TokenRefreshException ex, final WebRequest request, final HttpServletRequest req) throws Exception {
+    @ExceptionHandler({ TokenRefreshException.class, RestUnauthorizedException.class })
+    public ResponseEntity<Object> handleTokenRefreshException(final TokenRefreshException ex, final WebRequest request, final HttpServletRequest req) throws Exception {
 
-    //     String error = ex.getMessage();
+        String error = ex.getMessage();
 
-    //     AbstractRestBaseException _exception = new RestUnauthorizedException(error, ex);
-    //     RestErrorStatus restErrorStatus = new RestErrorStatus(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), error);
+        AbstractRestBaseException _exception = new RestUnauthorizedException(error, ex);
+        RestErrorStatus restErrorStatus = new RestErrorStatus(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), error);
 
-    //     return sendToExceptionInternal(ex, request, _exception, restErrorStatus);
-    // }
+        return sendToExceptionInternal(ex, request, _exception, restErrorStatus);
+    }
 
     private ResponseEntity<Object> sendToExceptionInternal(final Exception ex, final WebRequest request, AbstractRestBaseException _exception, RestErrorStatus restErrorStatus) {
         _exception.setCode(restErrorStatus.getErrorcode());

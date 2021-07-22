@@ -24,8 +24,8 @@ public class SocialData {
     private String email;
     private String type;
 
-    // @OneToOne(mappedBy = "social")
-    // private Member member;
+    @OneToOne(mappedBy = "social")
+    private Member member;
 
     public SocialData(String socialId, String email, String type) {
         this.socialId = socialId;
